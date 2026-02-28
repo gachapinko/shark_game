@@ -12,13 +12,13 @@ def get_base64_image(file_path):
 
 shark_base64 = get_base64_image("shark.png")
 
-# --- タイトル表示（ご指定のタイトルに変更） ---
-st.markdown("<h4 style='text-align: center; color: #333;'>🦈ジンベエザメからの小さな贈り物💩</h4>", unsafe_allow_html=True)
+# タイトル
+st.markdown("<h4 style='text-align: center; color: #333; margin-bottom: 0;'>🦈ジンベエザメからの小さな贈り物💩</h4>", unsafe_allow_html=True)
 
-# --- ゲーム画面 ---
+# --- ゲーム画面（縦幅を400pxに縮小） ---
 game_html = f"""
 <div id="game-container" style="
-    height: 500px; 
+    height: 400px; 
     width: 100%; 
     background: linear-gradient(#b3e5fc, #0277bd); 
     position: relative; 
@@ -26,6 +26,7 @@ game_html = f"""
     overflow: hidden; 
     touch-action: none;
     border: 4px solid white;
+    margin-bottom: 50px; /* ★フッターとの被り防止に余白を追加 */
 ">
     <div id="overlay" style="
         position: absolute;
@@ -37,34 +38,33 @@ game_html = f"""
         align-items: center;
         z-index: 100;
     ">
-        <div id="message" style="color: white; font-size: 22px; margin-bottom: 20px; font-weight: bold; text-align: center; padding: 0 20px;"></div>
+        <div id="message" style="color: white; font-size: 20px; margin-bottom: 20px; font-weight: bold; text-align: center; padding: 0 20px;"></div>
         <button id="start-btn" onclick="handleButtonClick()" style="
-            padding: 12px 25px;
+            padding: 10px 20px;
             font-size: 18px;
             background: #ffeb3b;
             border: none;
             border-radius: 50px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
             cursor: pointer;
         ">ゲームスタート！</button>
     </div>
 
     <img id="shark" src="data:image/png;base64,{shark_base64}" style="
         position: absolute; 
-        top: 30px; 
+        top: 20px; 
         left: 50%; 
-        width: 100px; 
+        width: 80px; 
         transform: translateX(-50%);
         transition: left 0.8s ease-in-out;
     ">
 
-    <div id="poop" style="position: absolute; top: -60px; left: 50%; font-size: 40px; display: none; z-index: 10;">💩</div>
+    <div id="poop" style="position: absolute; top: -60px; left: 50%; font-size: 35px; display: none; z-index: 10;">💩</div>
 
     <div id="basket" style="
         position: absolute; 
-        bottom: 15px; 
+        bottom: 10px; 
         left: 50%; 
-        font-size: 60px; 
+        font-size: 50px; 
         transform: translateX(-50%);
         pointer-events: none;
         z-index: 20;
@@ -73,9 +73,9 @@ game_html = f"""
     <div id="info-board" style="
         position: absolute; 
         top: 10px; 
-        left: 20px; 
+        left: 15px; 
         color: white; 
-        font-size: 16px; 
+        font-size: 14px; 
         font-weight: bold;
         text-shadow: 1px 1px 2px black;
     ">Lv: 1 | Score: 0</div>
@@ -134,7 +134,7 @@ game_html = f"""
         if(!gameActive) return;
         if(!poopDropping) {{
             poopX = sharkX; 
-            poopY = 25;
+            poopY = 20;
             poop.style.display = 'block';
             poopDropping = true;
         }}
@@ -162,16 +162,13 @@ game_html = f"""
         if(poopDropping) {{
             poopY += poopBaseSpeed + (level * 0.15); 
             
-            if (poopY > 80 && poopY < 95) {{
+            if (poopY > 75 && poopY < 90) {{
                 if (Math.abs(poopX - basketX) < 18) {{
                     score += 1;
                     updateInfo();
                     poopDropping = false;
                     poop.style.display = 'none';
-
-                    if (score > 0 && score % 20 === 0) {{
-                        levelUp();
-                    }}
+                    if (score > 0 && score % 20 === 0) levelUp();
                 }}
             }}
             
@@ -189,18 +186,15 @@ game_html = f"""
         gameActive = false;
         level++;
         overlay.style.display = 'flex';
-        
         if (level > 5) {{
-            message.innerText = "🎊 全レベルクリア！\\nあなたはジンベエマスターです！ 🎊";
+            message.innerText = "🎊 ジンベエマスター！ 🎊";
             startBtn.innerText = "もう一度遊ぶ";
         }} else {{
-            message.innerText = `🎉 Level ${{level-1}} クリア！\\n次は Level ${{level}} です！`;
+            message.innerText = `🎉 Level ${{level-1}} クリア！`;
             startBtn.innerText = "次のレベルへ進む";
         }}
     }}
 </script>
 """
 
-st.components.v1.html(game_html, height=550)
-
-st.caption("スマホで遊ぶときは、横向きよりも縦向きがおすすめです！")
+st.components.v1.html(game_html, height=480) # iframeの高さも調整
