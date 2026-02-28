@@ -13,7 +13,7 @@ def get_base64_image(file_path):
 shark_base64 = get_base64_image("shark.png")
 
 # タイトル
-st.markdown("<h4 style='text-align: center; color: #333; margin-bottom: 0;'>🦈ジンベエザメからの小さな贈り物💩</h4>", unsafe_allow_html=True)
+st.markdown("<h5 style='text-align: center; color: #333; margin-bottom: 0;'>🦈ジンベエザメからの小さな贈り物💩</h5>", unsafe_allow_html=True)
 
 # --- ゲーム画面（縦幅を400pxに縮小） ---
 game_html = f"""
